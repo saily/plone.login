@@ -7,6 +7,7 @@ from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from email import message_from_string
 from plone.login import MessageFactory as _
+from plone.login.browser.login_help import append_klasses
 from plone.login.browser.login_help import template_path
 from plone.login.interfaces import ILoginForm
 from plone.login.interfaces import ILoginFormSchema
@@ -64,6 +65,10 @@ class LoginForm(form.EditForm):
 
         super(LoginForm, self).updateWidgets(prefix='')
         self.widgets['came_from'].mode = HIDDEN_MODE
+
+        for idx, fieldname in enumerate([fieldname_name, fieldname_password]):
+            self.widgets[fieldname].tabindex = idx + 1
+            append_klasses(self.widgets[fieldname], 'stretch')
 
     @button.buttonAndHandler(_('Log in'), name='login')
     def handleLogin(self, action):
